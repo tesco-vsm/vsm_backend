@@ -1,0 +1,23 @@
+version: "3.3"
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - main
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    networks:
+      - main
+    environment:
+      MYSQL_DATABASE: vsm_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+networks:
+  main:
