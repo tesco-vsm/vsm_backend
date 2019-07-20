@@ -20,12 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z+#@!u!ow1949k**txnyi1iwga72f0gye(1j(my==&45m#6y+7'
+SECRET_KEY = os.environ.get('SECRET_KEY',
+                            default='z+#@!u!ow1949k**txnyi1iwga72f0gye(1j(my==&45m#6y+7'
+                            )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG", default=1))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -76,10 +78,10 @@ WSGI_APPLICATION = 'vsm_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'vsm_db',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'db',
+        'NAME': os.environ.get('SQL_DATABASE', 'vsm_db'),
+        'USER': os.environ.get('SQL_USER', 'root'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD', 'root'),
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
         'PORT': '3306'
     }
 }
@@ -122,3 +124,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")

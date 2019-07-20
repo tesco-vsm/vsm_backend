@@ -1,14 +1,20 @@
 language: python
+python:
+  - "3.6"
 sudo: required
 services:
   - docker
 before_install:
   - sudo service mysql stop
-  - docker-compose build
-  - docker-compose up -d
 
-script:
-  - docker-compose run web python manage.py test
+matrix:
+  include:
+    - before_install:
+        - docker-compose build
+        - docker-compose up -d
+      script:
+        - docker-compose run web python manage.py test
+
 branches:
   only:
     - master
