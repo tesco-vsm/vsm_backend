@@ -4,16 +4,23 @@ python:
 sudo: required
 services:
   - docker
-before_install:
-  - sudo service mysql stop
 
 matrix:
   include:
     - before_install:
+        - sudo service mysql stop
+      script:
         - docker-compose build
         - docker-compose up -d
-      script:
+        - docker-compose run web ./wait-for-it.sh web:8000 -t 70
         - docker-compose run web python manage.py test
+    - before_install:
+        - sudo service mysql stop
+      script:
+        - docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+        - docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+        - docker-compose -f docker-compose.yml -f docker-compose.prod.yml run web ./wait-for-it.sh web:8000 -t 70
+        - docker-compose -f docker-compose.yml -f docker-compose.prod.yml run web python manage.py test
 
 branches:
   only:
