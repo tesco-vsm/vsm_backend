@@ -1,0 +1,31 @@
+version: "3.3"
+services:
+  web:
+    volumes:
+      - static_volume:/app/static
+    environment:
+      - DEBUG=0
+      - SECRET_KEY=${SECRET_KEY}
+      - SQL_DATABASE=${SQL_DATABASE}
+      - SQL_USER=${SQL_USER}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - SQL_HOST=db
+    command: ./wait-for-it.sh db:3036 -t 60 -- gunicorn vsm_backend.wsgi:application --bind 0.0.0.0:8000
+  db:
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/usr/src/app/static
+    ports:
+      - "80:80"
+    networks:
+      - main
+    depends_on:
+      - web
+volumes:
+  static_volume:

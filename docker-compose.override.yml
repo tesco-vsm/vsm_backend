@@ -1,0 +1,15 @@
+version: "3.3"
+services:
+  web:
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=1
+      - SQL_DATABASE=vsm_db
+      - SQL_USER=root
+      - SQL_PASSWORD=root
+      - SQL_HOST=db
+  db:
+    environment:
+      MYSQL_DATABASE: vsm_db
+      MYSQL_ROOT_PASSWORD: root
